@@ -1,10 +1,6 @@
-require 'active_support/current_attributes'
+require 'request_store'
 
 module MultiTenant
-  class Current < ::ActiveSupport::CurrentAttributes
-    attribute :tenant
-  end
-
   def self.tenant_klass_defined?(tenant_name)
     !!tenant_name.to_s.classify.safe_constantize
   end
@@ -57,11 +53,11 @@ module MultiTenant
   end
 
   def self.current_tenant=(tenant)
-    Current.tenant = tenant
+    RequestStore.store[:current_tenant] = tenant
   end
 
   def self.current_tenant
-    Current.tenant
+    RequestStore.store[:current_tenant]
   end
 
   def self.current_tenant_id
